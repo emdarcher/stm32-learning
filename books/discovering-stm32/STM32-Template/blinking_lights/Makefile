@@ -8,6 +8,9 @@ ASFLAGS = -g
 # object files
 
 OBJS=  $(STARTUP) blinking_lights.o
+#extra stuff
+OBJS+=	stm32f10x_gpio.o stm32f10x_rcc.o
+
 
 # include common make file
 

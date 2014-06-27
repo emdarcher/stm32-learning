@@ -14,7 +14,7 @@ int main(void)
 	
 	/*(1)*/
 
-	RCC_APB2PeriphClockCmd(RCC_APM2Periph_GPIOC, ENABLE);	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	
 
 	// Configure Pins
 	/*(2)*/
