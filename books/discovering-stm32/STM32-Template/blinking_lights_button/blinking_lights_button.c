@@ -22,7 +22,7 @@ int main(void)
 	/*(2)*/
 		
 	GPIO_StructInit(&GPIO_InitStructure);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 + GPIO_Pin_8;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_2MHz;
 	//
@@ -53,6 +53,7 @@ int main(void)
 		// toggle led
 		/*(4)*/
 		GPIO_WriteBit(GPIOC, GPIO_Pin_9, (ledval) ? Bit_SET : Bit_RESET);
+		GPIO_WriteBit(GPIOC, GPIO_Pin_8, (ledval) ? Bit_RESET : Bit_SET);
 		ledval = 1 - ledval;
 
 		Delay(250);		// wait 250ms
