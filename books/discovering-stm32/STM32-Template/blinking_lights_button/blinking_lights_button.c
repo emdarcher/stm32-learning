@@ -15,6 +15,8 @@ int main(void)
 	/*(1)*/
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	
+	//Oh THIS CLOCK!
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
 	// Configure Pins
 	/*(2)*/
@@ -27,7 +29,15 @@ int main(void)
 	GPIO_Init(GPIOC,	&GPIO_InitStructure);
 	//
 	//button config here I think with a new GPIO_InitStructure thingy
+	GPIO_StructInit(&GPIO_InitStructure);
+	//make sure to do clock init first?
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	
+	
 	// Configure SysTick Timer
 	/*(3)*/
 	if (SysTick_Config(SystemCoreClock / 1000))
@@ -35,13 +45,18 @@ int main(void)
 
 	while (1)	{
 		static int ledval = 0;
-
+		
+		if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == 1){
+			//ledval=1;
+			GPIO_WriteBit(GPIOC, GPIO_Pin_9, Bit_SET);
+		}else{
 		// toggle led
 		/*(4)*/
 		GPIO_WriteBit(GPIOC, GPIO_Pin_9, (ledval) ? Bit_SET : Bit_RESET);
 		ledval = 1 - ledval;
 
 		Delay(250);		// wait 250ms
+		}
 	}
 }
 
