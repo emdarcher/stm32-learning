@@ -23,10 +23,10 @@ int main(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_2MHz;
-	//add button pin initializations somewhere
-	//here or after?
+	//
 	GPIO_Init(GPIOC,	&GPIO_InitStructure);
-
+	//
+	//button config here I think with a new GPIO_InitStructure thingy
 
 	// Configure SysTick Timer
 	/*(3)*/
