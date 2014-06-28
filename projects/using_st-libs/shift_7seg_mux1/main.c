@@ -1,8 +1,11 @@
-//blinking lights tutorial/walkthrough in book
+//going to try controlling 4 7segment displays with a shift register
+//controlled via SPI
 
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_gpio.h>
+#include <stm32f10x_spi.h>
+#include "manual_spi.h"
 
 void Delay(uint32_t nTime);
 
