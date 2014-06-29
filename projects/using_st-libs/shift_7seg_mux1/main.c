@@ -45,7 +45,7 @@ int main(void)
     // Configure SysTick Timer
     /*(3)*/
     
-    if (SysTick_Config(SystemCoreClock / 1000))
+    if (SysTick_Config(SystemCoreClock / 10000)) //every us
         while (1);
 
     //GPIOA->BSRR |= (1<<4);
@@ -64,7 +64,7 @@ int main(void)
 static __IO uint32_t TimingDelay;
 
 void Delay(uint32_t nTime) {
-    TimingDelay = nTime;
+    TimingDelay = nTime*1;
     while(TimingDelay != 0);
 }
 
@@ -197,7 +197,7 @@ void write_digit(int8_t num, uint8_t dig){
     GPIOA->BSRR |= (1<<4);
 	GPIOA->BSRR |= (1<<3); //put SS/CS high again to latch shift register
 	//flip_latch();
-    Delay(1);
+    Delay(5);
 }
 
 void msg_error(void){
