@@ -18,6 +18,16 @@ void write_digit(int8_t num, uint8_t dig);
 
 void Delay(uint32_t nTime);
 
+void set_NSS(void){
+
+    if(SPI1->CR1 & SPI_CR1_SSI){
+        GPIOA->BSRR |= (1<<4);
+    } else {
+        GPIOA->BRR  |= (1<<4);
+    }
+
+}
+
 uint8_t txbuf [4], rxbuf [4];
 uint16_t txbuf16 [4], rxbuf16 [4];
 
@@ -126,7 +136,7 @@ void init_SPI1(void){
     //CPHA = 0
     SPI1->CR1 &= ~( SPI_CR1_BIDIMODE | 
                     SPI_CR1_DFF | 
-                    SPI_CR1_SSM | 
+                    //SPI_CR1_SSM | 
                     SPI_CR1_LSBFIRST |
                     SPI_CR1_CPOL | 
                     SPI_CR1_CPHA |
@@ -151,19 +161,23 @@ void init_SPI1(void){
 }
 
 void write_SPI1(uint8_t out_byte){
-
+    //SPI1->CR1 &= ~SPI_CR1_SSI;
     SPI1->DR = out_byte;
+    //set_NSS();
     //SPI_I2S_SendData(SPI1, out_byte);
     //spiReadWrite (SPI2 , rxbuf , SPI_out_byte , 4, SPI_SLOW );
     while( !(SPI1->SR & SPI_SR_TXE) ); // wait until transmit complete
+        //set_NSS();
     while( SPI1->SR & SPI_SR_BSY ); // wait until SPI is not busy anymore
+    //set_NSS();
+    //SPI1->CR1 |= SPI_CR1_SSI;
 }
 
 void write_digit(int8_t num, uint8_t dig){
 	uint8_t k;
     
     GPIOA->BRR |= (1<<3); //put SS/CS low
-    
+    GPIOA->BRR |= (1<<4);
 	if((num < 10) && (num >= 0)){
     SPI_out_byte = number_seg_bytes[num];
     } else {
@@ -180,6 +194,7 @@ void write_digit(int8_t num, uint8_t dig){
             GPIOC->BRR |= (digit_bits[k]);
 		}
 	}
+    GPIOA->BSRR |= (1<<4);
 	GPIOA->BSRR |= (1<<3); //put SS/CS high again to latch shift register
 	//flip_latch();
     Delay(1);
