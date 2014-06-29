@@ -17,9 +17,35 @@ void spiInit(SPI_TypeDef *SPIx)
   GPIO_StructInit(&GPIO_InitStructure);
   SPI_StructInit(&SPI_InitStructure);
 
-  if (SPIx == SPI2) {  
+  if (SPIx == SPI1) {  
     /* Enable clocks, configure pins */
-    ...  You need to enable clocks and pins !
+    //...  You need to enable clocks and pins !
+    //on APB2
+    //enable SPI1, GPIO A, Alternate function IO.
+    RCC->APB2ENR |= (   RCC_APB2ENR_SPI1EN | 
+                        RCC_APB2ENR_IOPAEN | 
+                        RCC_APB2ENR_AFIOEN );
+    
+    
+    //configure GPIO Pins used for SPI1
+    
+    //SCK pin PA5
+    //setup output 50MHz, alternate function OUTPUT Push-Pull
+    GPIOA->CRL |= ( GPIO_CRL_MODE5 | GPIO_CRL_CNF5_1 );
+    GPIOA->CRL &= ~GPIO_CRL_CNF5_0;
+    //MISO not used right now
+    //....
+    
+    
+    //MOSI pin PA7
+    //same kind of setup as the SCK pin
+    GPIOA->CRL |= ( GPIO_CRL_MODE7 | GPIO_CRL_CNF7_1 );
+    GPIOA->CRL &= ~GPIO_CRL_CNF7_0;
+    
+    //NSS/SS/CS pin PA4
+    //general purpose output push pull 50MHz 
+    GPIOA->CRL |= (GPIO_CRL_MODE4 );
+    GPIOA->CRL &= ~GPIO_CRL_CNF4;
    }  else  {  //  other SPI devices --
       return;
   }

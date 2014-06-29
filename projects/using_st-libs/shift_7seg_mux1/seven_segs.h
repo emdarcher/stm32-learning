@@ -51,6 +51,7 @@ pull segment's pin LOW to turn it on
 #define ALL_DIGS ( DIG_0 | DIG_1 | DIG_2 | DIG_3 )
 
 const uint16_t digit_bits[] = { DIG_0, DIG_1, DIG_2, DIG_3 };
+const uint8_t  num_digits = sizeof(digit_bits)/2;
 
 const uint8_t number_seg_bytes[] = {
 //       unconfigured
