@@ -2,10 +2,10 @@
 //controlled via SPI
 
 #include <stm32f10x.h>
-#include <stm32f10x_rcc.h>
-#include <stm32f10x_gpio.h>
-#include <stm32f10x_spi.h>
-#include "manual_spi.h"
+//#include <stm32f10x_rcc.h>
+//#include <stm32f10x_gpio.h>
+//#include <stm32f10x_spi.h>
+//#include "manual_spi.h"
 #include "seven_segs.h"
 
 void init_SPI1(void);
@@ -18,18 +18,17 @@ void write_digit(int8_t num, uint8_t dig);
 
 void Delay(uint32_t nTime);
 
-void set_NSS(void){
+/*void set_NSS(void){
 
     if(SPI1->CR1 & SPI_CR1_SSI){
         GPIOA->BSRR |= (1<<4);
     } else {
         GPIOA->BRR  |= (1<<4);
     }
+}*/
 
-}
-
-uint8_t txbuf [4], rxbuf [4];
-uint16_t txbuf16 [4], rxbuf16 [4];
+//uint8_t txbuf [4], rxbuf [4];
+//uint16_t txbuf16 [4], rxbuf16 [4];
 
 uint8_t SPI_out_byte;
 uint16_t digits_out;
@@ -45,7 +44,7 @@ int main(void)
     // Configure SysTick Timer
     /*(3)*/
     
-    if (SysTick_Config(SystemCoreClock / 10000)) //every us
+    if (SysTick_Config(SystemCoreClock / 100000)) //every 
         while (1);
 
     //GPIOA->BSRR |= (1<<4);
@@ -197,7 +196,7 @@ void write_digit(int8_t num, uint8_t dig){
     GPIOA->BSRR |= (1<<4);
 	GPIOA->BSRR |= (1<<3); //put SS/CS high again to latch shift register
 	//flip_latch();
-    Delay(5);
+    Delay(25);
 }
 
 void msg_error(void){

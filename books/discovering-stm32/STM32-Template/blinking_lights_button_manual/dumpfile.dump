@@ -1,0 +1,109 @@
+
+blinking_lights_button_manual.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <main>:
+	
+	/*(1)*/
+
+	//RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	
+	//manual
+	RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
+   0:	4b11      	ldr	r3, [pc, #68]	; (48 <main+0x48>)
+   2:	699a      	ldr	r2, [r3, #24]
+   4:	f042 0210 	orr.w	r2, r2, #16
+   8:	619a      	str	r2, [r3, #24]
+
+	//Oh THIS CLOCK!
+	//RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	//manual
+	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+   a:	699a      	ldr	r2, [r3, #24]
+   c:	f042 0204 	orr.w	r2, r2, #4
+  10:	619a      	str	r2, [r3, #24]
+	*/
+	//manually
+	
+	//GPIOC_CRH |= (1<<1); 	
+  //GPIOC->CRH |= (1<<1);
+	GPIOC->CRH = GPIO_CRH_MODE8_1;	
+  12:	2202      	movs	r2, #2
+  14:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
+  18:	605a      	str	r2, [r3, #4]
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	*/
+	//	GPIOA_CRL |= (1<<2);
+	//GPIOA->CRL |= (1<<2);
+	GPIOA->CRL	|= GPIO_CRL_CNF0_0;	
+  1a:	f5a3 6300 	sub.w	r3, r3, #2048	; 0x800
+  1e:	681a      	ldr	r2, [r3, #0]
+  20:	f042 0204 	orr.w	r2, r2, #4
+  24:	601a      	str	r2, [r3, #0]
+	//		while (1);
+
+	while (1)	{
+		//static int ledval = 0;
+		
+		uint16_t input_port_vals = GPIOA->IDR;		
+  26:	4619      	mov	r1, r3
+			
+		if ((input_port_vals & (1<<0)) == (1<<0)){
+			GPIOC->BSRR |= (1<<8);
+		}else{
+			GPIOC->BRR |= (1<<8);
+  28:	f503 6300 	add.w	r3, r3, #2048	; 0x800
+	//		while (1);
+
+	while (1)	{
+		//static int ledval = 0;
+		
+		uint16_t input_port_vals = GPIOA->IDR;		
+  2c:	688a      	ldr	r2, [r1, #8]
+			
+		if ((input_port_vals & (1<<0)) == (1<<0)){
+  2e:	f012 0f01 	tst.w	r2, #1
+  32:	d004      	beq.n	3e <main+0x3e>
+			GPIOC->BSRR |= (1<<8);
+  34:	691a      	ldr	r2, [r3, #16]
+  36:	f442 7280 	orr.w	r2, r2, #256	; 0x100
+  3a:	611a      	str	r2, [r3, #16]
+  3c:	e7f6      	b.n	2c <main+0x2c>
+		}else{
+			GPIOC->BRR |= (1<<8);
+  3e:	695a      	ldr	r2, [r3, #20]
+  40:	f442 7280 	orr.w	r2, r2, #256	; 0x100
+  44:	615a      	str	r2, [r3, #20]
+  46:	e7f1      	b.n	2c <main+0x2c>
+  48:	40021000 	.word	0x40021000
+
+0000004c <Delay>:
+/*(5)*/
+
+static __IO uint32_t TimingDelay;
+
+void Delay(uint32_t nTime){
+	TimingDelay = nTime;
+  4c:	4b03      	ldr	r3, [pc, #12]	; (5c <Delay+0x10>)
+  4e:	6018      	str	r0, [r3, #0]
+	while(TimingDelay != 0);
+  50:	461a      	mov	r2, r3
+  52:	6813      	ldr	r3, [r2, #0]
+  54:	2b00      	cmp	r3, #0
+  56:	d1fc      	bne.n	52 <Delay+0x6>
+}
+  58:	4770      	bx	lr
+  5a:	bf00      	nop
+  5c:	00000000 	.word	0x00000000
+
+00000060 <assert_failed>:
+		TimingDelay--;
+}*/
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t* file, uint32_t line)
+{
+  60:	e7fe      	b.n	60 <assert_failed>
+  62:	bf00      	nop
