@@ -1,5 +1,8 @@
 //header file with seven segment stuff
 
+#ifndef SEVEN_SEGS
+#define SEVEN_SEGS
+
 #include <stdint.h>
 
 /*
@@ -68,3 +71,17 @@ const uint8_t number_seg_bytes[] = {
 0b11100110,//9
 0b10011110, //'E' for error
 };
+
+uint8_t SPI_out_byte;
+uint16_t digits_out;
+
+
+void init_SPI1(void);
+void init_digit_pins(void);
+void write_SPI1(uint8_t out_byte);
+void msg_error(void);
+
+void write_number(int16_t number);
+void write_digit(int8_t num, uint8_t dig);
+
+#endif
