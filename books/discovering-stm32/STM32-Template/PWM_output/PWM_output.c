@@ -1,4 +1,4 @@
-//blinking lights tutorial/walkthrough in book
+//pwm-stuff for LED
 
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
@@ -83,12 +83,12 @@ void init_timers(void) {
 
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure ;
     TIM_OCInitTypeDef TIM_OCInitStructure ;
-// enable timer clock
+    // enable timer clock
     RCC_APB1PeriphClockCmd ( RCC_APB1Periph_TIM2 , ENABLE );
-// configure timer
-// PWM frequency = 100 hz with 24 ,000 ,000 hz system clock
-//  24 ,000 ,000/240 = 100 ,000
-// 100 ,000/1000 = 100
+    // configure timer
+    // PWM frequency = 100 hz with 24 ,000 ,000 hz system clock
+    //  24 ,000 ,000/240 = 100 ,000
+    // 100 ,000/1000 = 100
     
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure );
     TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock /100000 - 1; // 0..239
