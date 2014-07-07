@@ -9,10 +9,10 @@ ASFLAGS = -g
 
 OBJS=  $(STARTUP) timer_pulse_7seg.o
 #extra stuff
-OBJS+=	stm32f10x_gpio.o 
-OBJS+= stm32f10x_rcc.o 
-OBJS+= stm32f10x_tim.o 
-OBJS+= stm32f10x_spi.o 
+#OBJS+=	stm32f10x_gpio.o 
+#OBJS+= stm32f10x_rcc.o 
+#OBJS+= stm32f10x_tim.o 
+#OBJS+= stm32f10x_spi.o 
 OBJS+= seven_segs.o 
 
 

@@ -3,10 +3,10 @@
 //send pulse on PB8 capture on PB6-7 with timer 16 and 4, respectively.
 
 #include <stm32f10x.h>
-#include <stm32f10x_rcc.h>
-#include <stm32f10x_gpio.h>
-#include <stm32f10x_tim.h>
-#include <stm32f10x_spi.h>
+//#include <stm32f10x_rcc.h>
+//#include <stm32f10x_gpio.h>
+//#include <stm32f10x_tim.h>
+//#include <stm32f10x_spi.h>
 #include "seven_segs.h"
 
 void Delay(uint32_t nTime);
@@ -17,7 +17,7 @@ void send_pulse_tim16(uint8_t pulse_ms);
 
 int main(void)
 {
-    GPIO_InitTypeDef	GPIO_InitStructure;
+    //GPIO_InitTypeDef	GPIO_InitStructure;
 
     // Enable Peripheral Clocks
 
@@ -59,43 +59,7 @@ int main(void)
 /*(5)*/
 
 void init_timers(void) {
-    GPIO_InitTypeDef	GPIO_InitStructure;
-    
-    /*
-    //setup GPIO for PA1, the output of TIM2 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-    
-    GPIO_StructInit(&GPIO_InitStructure);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-    GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_2MHz;
-    GPIO_Init(GPIOA,&GPIO_InitStructure);
-    
-
-    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure ;
-    TIM_OCInitTypeDef TIM_OCInitStructure ;
-    // enable timer clock
-    RCC_APB1PeriphClockCmd ( RCC_APB1Periph_TIM2 , ENABLE );
-    // configure timer
-    // PWM frequency = 100 hz with 24 ,000 ,000 hz system clock
-    //  24 ,000 ,000/240 = 100 ,000
-    // 100 ,000/1000 = 100
-    
-    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure );
-    TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock /100000 - 1; // 0..239
-    TIM_TimeBaseStructure.TIM_Period = 1000 - 1; // 0..999
-    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up ;
-    TIM_TimeBaseInit (TIM2, &TIM_TimeBaseStructure );
-    // PWM1 Mode configuration : Channel2
-    //Edge - aligned ; not single pulse mode
-    TIM_OCStructInit (&TIM_OCInitStructure );
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1 ;
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable ;
-    TIM_OC2Init (TIM2 , &TIM_OCInitStructure );
-    // Enable Timer
-    TIM_Cmd (TIM2 , ENABLE );
-    */
-    
+    //GPIO_InitTypeDef	GPIO_InitStructure;
     
     //setup clock for GPIOB with alternate function IO allowed
     //then also enable the  TIM16 clock
@@ -137,9 +101,27 @@ void init_timers(void) {
     
     
     //setup TIM4 stuff
+    //using PWM input mode from RM0041 page 292
     
     TIM4->PSC = (uint16_t)(23999); //to get 1,000Hz timer clock
     
+    //setup CCR1 and CCR2 to go to TI1
+    TIM4->CCMR1 |= (TIM_CCMR1_CC1S_0 |
+                    TIM_CCMR1_CC2S_1 );
+                    
+    //setup CCR2 to activate on falling edge
+    TIM4->CCER |= ( TIM_CCER_CC2P   );
+    
+    //setup the timer input triggering for TI1
+    TIM4->SMCR |= ( TIM_SMCR_TS_2 | TIM_SMCR_TS_0 );
+    TIM4->SMCR &= ~(TIM_SMCR_TS_1 );
+    
+    //slave mode selection to reset mode
+    TIM4->SMCR |= ( TIM_SMCR_SMS_2 );
+    TIM4->SMCR &= ~(TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0);
+    
+    //enable the capture inputs
+    TIM4->CCER |= ( TIM_CCER_CC1E | TIM_CCER_CC2E );
 }
 
 void send_pulse_tim16(uint8_t pulse_ms){
