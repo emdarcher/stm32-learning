@@ -13,6 +13,8 @@ void Delay(uint32_t nTime);
 
 void init_timers(void);
 
+void send_pulse_tim16(uint8_t pulse_ms);
+
 int main(void)
 {
     GPIO_InitTypeDef	GPIO_InitStructure;
@@ -104,10 +106,10 @@ void init_timers(void) {
     
     //setup pins 
     
-    //PB9 input floating, 
-    GPIOB->CRH |= ( GPIO_CRH_CNF9_0 );
-    GPIOB->CRH &= ~(GPIO_CRH_CNF9_1 |
-                    GPIO_CRH_MODE9  ):
+    //PB6-7 input floating, 
+    GPIOB->CRL |= ( GPIO_CRL_CNF6_0 | GPIO_CRL_CNF7_0 );
+    GPIOB->CRL &= ~(GPIO_CRL_CNF6_1 | GPIO_CRL_CNF7_1 |
+                    GPIO_CRL_MODE6  | GPIO_CRL_MODE7  ):
     //PB8 output push pull, alternate function, 2MHz
     GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
                     GPIO_CRH_MODE8_1);
@@ -132,8 +134,13 @@ void init_timers(void) {
     TIM16->CR1 |= ( TIM_CR1_CEN );
     
     
+    //setup TIM4 stuff
+    
 }
 
+void send_pulse_tim16(uint8_t pulse_ms){
+    TIM16->CCR1 = (uint16_t)(pulse_ms);
+}
 
 static __IO uint32_t TimingDelay;
 
