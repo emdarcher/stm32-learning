@@ -110,6 +110,8 @@ void init_timers(void) {
     GPIOB->CRL |= ( GPIO_CRL_CNF6_0 | GPIO_CRL_CNF7_0 );
     GPIOB->CRL &= ~(GPIO_CRL_CNF6_1 | GPIO_CRL_CNF7_1 |
                     GPIO_CRL_MODE6  | GPIO_CRL_MODE7  ):
+                    
+                    
     //PB8 output push pull, alternate function, 2MHz
     GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
                     GPIO_CRH_MODE8_1);
@@ -135,6 +137,8 @@ void init_timers(void) {
     
     
     //setup TIM4 stuff
+    
+    TIM4->PSC = (uint16_t)(23999); //to get 1,000Hz timer clock
     
 }
 
