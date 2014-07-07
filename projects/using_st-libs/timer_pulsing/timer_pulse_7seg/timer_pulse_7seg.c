@@ -1,6 +1,6 @@
 //send out a pulse and then compture it with another timer.
 //display the captured pulse length in ms on the 7 segment displays.
-//send pulse on PB8 capture on PB9 with timer 16 and 17, respectively.
+//send pulse on PB8 capture on PB6-7 with timer 16 and 4, respectively.
 
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
@@ -96,14 +96,14 @@ void init_timers(void) {
     
     
     //setup clock for GPIOB with alternate function IO allowed
-    //then also enable the TIM17 and TIM16 clocks
+    //then also enable the  TIM16 clock
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
                         RCC_APB2ENR_AFIOEN  |
-                        RCC_APB2ENR_TIM17EN |
                         RCC_APB2ENR_TIM16EN );
     
     
-    //setup PB9 and PB8
+    //setup pins 
+    
     //PB9 input floating, 
     GPIOB->CRH |= ( GPIO_CRH_CNF9_0 );
     GPIOB->CRH &= ~(GPIO_CRH_CNF9_1 |

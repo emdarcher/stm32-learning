@@ -56,8 +56,8 @@ void init_SPI1(void){
     GPIOA->CRL &= ~GPIO_CRL_CNF4;
     
     //test CS on PA3
-    GPIOA->CRL |= (GPIO_CRL_MODE3 );
-    GPIOA->CRL &= ~GPIO_CRL_CNF3;
+    //GPIOA->CRL |= (GPIO_CRL_MODE3 );
+    //GPIOA->CRL &= ~GPIO_CRL_CNF3;
     
     //SPI1 setup stuff
     //setup 2 line unidirecional data mode
@@ -108,7 +108,7 @@ void write_SPI1(uint8_t out_byte){
 void write_digit(int8_t num, uint8_t dig){
 	uint8_t k;
     
-    GPIOA->BRR |= (1<<3); //put SS/CS low
+    //put SS/CS low
     GPIOA->BRR |= (1<<4);
 	if((num < 10) && (num >= 0)){
     SPI_out_byte = number_seg_bytes[num];
@@ -126,8 +126,7 @@ void write_digit(int8_t num, uint8_t dig){
             GPIOC->BRR |= (digit_bits[k]);
 		}
 	}
-    GPIOA->BSRR |= (1<<4);
-	GPIOA->BSRR |= (1<<3); //put SS/CS high again to latch shift register
+    GPIOA->BSRR |= (1<<4); //put SS/CS high again to latch shift register
 	//flip_latch();
     Delay(25);
 }
