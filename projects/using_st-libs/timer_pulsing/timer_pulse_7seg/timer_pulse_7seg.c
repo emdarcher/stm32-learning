@@ -1,4 +1,6 @@
-//pwm-stuff for LED
+//send out a pulse and then compture it with another timer.
+//display the captured pulse length in ms on the 7 segment displays.
+//send pulse on PB8 capture on PB9 with timer 16 and 17, respectively.
 
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
@@ -21,7 +23,7 @@ int main(void)
 
     //RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
     //Oh THIS CLOCK!
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    //RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
     // Configure Pins
     /*(2)*/
@@ -56,6 +58,8 @@ int main(void)
 
 void init_timers(void) {
     GPIO_InitTypeDef	GPIO_InitStructure;
+    
+    /*
     //setup GPIO for PA1, the output of TIM2 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
     
@@ -88,6 +92,46 @@ void init_timers(void) {
     TIM_OC2Init (TIM2 , &TIM_OCInitStructure );
     // Enable Timer
     TIM_Cmd (TIM2 , ENABLE );
+    */
+    
+    
+    //setup clock for GPIOB with alternate function IO allowed
+    //then also enable the TIM17 and TIM16 clocks
+    RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
+                        RCC_APB2ENR_AFIOEN  |
+                        RCC_APB2ENR_TIM17EN |
+                        RCC_APB2ENR_TIM16EN );
+    
+    
+    //setup PB9 and PB8
+    //PB9 input floating, 
+    GPIOB->CRH |= ( GPIO_CRH_CNF9_0 );
+    GPIOB->CRH &= ~(GPIO_CRH_CNF9_1 |
+                    GPIO_CRH_MODE9  ):
+    //PB8 output push pull, alternate function, 2MHz
+    GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
+                    GPIO_CRH_MODE8_1);
+    GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
+                    GPIO_CRH_MODE8_0);
+    
+    
+    //setup TIM16
+
+    //timer 16 clock 24,000,000/1,000 = 24,000 so prescaler 24,000
+    //to get 1,000Hz timer clock
+    TIM16->PSC = (uint16_t)(23999); //23999 + 1 = 24000
+    TIM16->ARR = (uint16_t)(255); //0 to 255 ms
+    //one pulse mode
+    TIM16->CR1 |= ( TIM_CR1_OPM );
+    //setup PWM mode two, OCIM 111, OC1 is high when CNT < CCR1
+    TIM16->CCMR1 |= ( TIM_CCMR1_OC1M );
+    //enable CCR1 output OC1
+    TIM16->CCER |= ( TIM_CCER_CC1E );
+    
+    //enable TIM16
+    TIM16->CR1 |= ( TIM_CR1_CEN );
+    
+    
 }
 
 
