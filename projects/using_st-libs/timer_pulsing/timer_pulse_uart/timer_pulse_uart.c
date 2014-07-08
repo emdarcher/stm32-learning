@@ -1,5 +1,5 @@
 //send out a pulse and then compture it with another timer.
-//display the captured pulse length in ms on the 7 segment displays.
+//display the captured pulse length in ms on the uart
 //send pulse on PB8 capture on PB6-7 with timer 16 and 4, respectively.
 
 #include <stm32f10x.h>
@@ -7,7 +7,10 @@
 //#include <stm32f10x_gpio.h>
 //#include <stm32f10x_tim.h>
 //#include <stm32f10x_spi.h>
-#include "seven_segs.h"
+//#include "seven_segs.h"
+#include <stm32f10x_usart.h>
+#include <stdio.h>
+#include "manual_uart.h"
 
 void Delay(uint32_t nTime);
 
@@ -17,7 +20,8 @@ void send_pulse_tim16(uint8_t pulse_ms);
 
 void get_pulse_ms_tim4(void);
 
-uint16_t pulse_ms_tim4;
+volatile uint16_t pulse_ms_tim4;
+volatile uint16_t pulse_store;
 
 int main(void)
 {
@@ -35,8 +39,8 @@ int main(void)
     /*(2)*/
     
     init_timers();
-    init_SPI1();
-    init_digit_pins();
+    //init_SPI1();
+    //init_digit_pins();
     
     
     // Configure SysTick Timer
@@ -44,18 +48,24 @@ int main(void)
     if (SysTick_Config(SystemCoreClock / 1000))
         while (1);
 
+    uart_open(USART1, 9600, USART_FLAG_TXE);
+
+    
+    
     while (1)	{
         int i;
-        
-        for (i = 0; i < 1000;i++){
-            write_number(pulse_ms_tim4);
-        }
-        send_pulse_tim16(100);
-        Delay(200);
+        //enable TIM16
+    TIM16->CR1 |= ( TIM_CR1_CEN );//enable TIM16
+    
+        send_pulse_tim16(255);
+        Delay(110);
+        pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
-        for (i=0;i<1000;i++){
-            write_number(pulse_ms_tim4);
-        }
+        uart_print_string_int(pulse_ms_tim4,USART1);
+        //uart_putc('\n',USART1);
+        //enable TIM16
+    TIM16->CR1 &= ~( TIM_CR1_CEN );
+        //Delay(1000);
     }   
 }
 
@@ -70,6 +80,8 @@ void init_timers(void) {
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
                         RCC_APB2ENR_AFIOEN  |
                         RCC_APB2ENR_TIM16EN );
+    //enable TIM4 clock!!!!
+    RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
     
     
     //setup pins 
