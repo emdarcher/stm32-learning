@@ -1,6 +1,6 @@
 //send out a pulse and then compture it with another timer.
 //display the captured pulse length in ms on the uart
-//send pulse on PB8 capture on PB6-7 with timer 16 and 4, respectively.
+//send pulse 
 
 #include <stm32f10x.h>
 //#include <stm32f10x_rcc.h>
@@ -67,7 +67,7 @@ int main(void)
         //uart_print_string_int(pulse_ms_tim4,USART1);
         //uart_putc('\n',USART1);
         //disable TIM16
-        TIM16->CR1 &= ~( TIM_CR1_CEN );
+    TIM16->CR1 &= ~( TIM_CR1_CEN );
         //Delay(1000);
     }   
 }
@@ -79,10 +79,17 @@ void init_timers(void) {
     //GPIO_InitTypeDef	GPIO_InitStructure;
     
     //setup clock for GPIOB with alternate function IO allowed
-    //then also enable the  TIM16 clock
+    //then also enable the  TIM15 clock
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
                         RCC_APB2ENR_AFIOEN  |
-                        RCC_APB2ENR_TIM16EN );
+                        RCC_APB2ENR_TIM15EN );
+                        
+    //timer 15 remap?
+    //
+    
+    //setup GPIOA
+    RCC->APB2ENR |= (   RCC_APB2ENR_IOPAEN  );
+    
     //enable TIM4 clock!!!!
     RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
     
@@ -100,23 +107,30 @@ void init_timers(void) {
                     GPIO_CRH_MODE8_1);
     GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
                     GPIO_CRH_MODE8_0);
+                    
+    //PA2 TIM15_CH1
+    //PUSH-PULL, AFIO, 2MHz
+    GPIOA->CRL |= ( GPIO_CRL_CNF2_1 |
+                    GPIO_CRL_MODE2_1);
+    GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
+                    GPIO_CRL_MODE2_0);
     
     
-    //setup TIM16
+    //setup TIM15
 
-    //timer 16 clock 24,000,000/1,000 = 24,000 so prescaler 24,000
+    //timer 15 clock 24,000,000/1,000 = 24,000 so prescaler 24,000
     //to get 1,000Hz timer clock
-    TIM16->PSC = (uint16_t)(23999); //23999 + 1 = 24000
-    TIM16->ARR = (uint16_t)(255); //0 to 255 ms
+    TIM15->PSC = (uint16_t)(23999); //23999 + 1 = 24000
+    TIM15->ARR = (uint16_t)(255); //0 to 255 ms
     //one pulse mode
-    TIM16->CR1 |= ( TIM_CR1_OPM );
+    TIM15->CR1 |= ( TIM_CR1_OPM );
     //setup PWM mode two, OCIM 111, OC1 is high when CNT < CCR1
-    TIM16->CCMR1 |= ( TIM_CCMR1_OC1M );
+    TIM15->CCMR1 |= ( TIM_CCMR1_OC1M );
     //enable CCR1 output OC1
-    TIM16->CCER |= ( TIM_CCER_CC1E );
+    TIM15->CCER |= ( TIM_CCER_CC1E );
     
-    //enable TIM16
-    //TIM16->CR1 |= ( TIM_CR1_CEN );
+    //enable TIM15
+    TIM15->CR1 |= ( TIM_CR1_CEN );
     
     
     //setup TIM4 stuff
