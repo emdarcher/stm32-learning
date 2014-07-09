@@ -16,7 +16,7 @@ void Delay(uint32_t nTime);
 
 void init_timers(void);
 
-void send_pulse_tim16(uint8_t pulse_ms);
+void send_pulse_tim15(uint8_t pulse_ms);
 
 void get_pulse_ms_tim4(void);
 
@@ -57,17 +57,17 @@ int main(void)
         //enable TIM16
     //TIM16->CR1 |= ( TIM_CR1_CEN );//enable TIM16
     
-        send_pulse_tim16(250);
-        TIM16->CR1 |= ( TIM_CR1_CEN );//enable TIM16
+        send_pulse_tim15(250);
+        //TIM15->CR1 |= ( TIM_CR1_CEN );//enable TIM16
         //Delay(110);
-        while((TIM16->SR & TIM_SR_CC1IF) == 0); //wait till done
+        while((TIM15->SR & TIM_SR_CC1IF) == 0); //wait till done
         
         pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
         //uart_print_string_int(pulse_ms_tim4,USART1);
         //uart_putc('\n',USART1);
         //disable TIM16
-    TIM16->CR1 &= ~( TIM_CR1_CEN );
+    //TIM15->CR1 &= ~( TIM_CR1_CEN );
         //Delay(1000);
     }   
 }
@@ -114,7 +114,10 @@ void init_timers(void) {
                     GPIO_CRL_MODE2_1);
     GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
                     GPIO_CRL_MODE2_0);
-    
+    //PA3 TIM15_CH2 for input trigger
+    GPIOB->CRL |= ( GPIO_CRL_CNF3_0);
+    GPIOB->CRL &= ~(GPIO_CRL_CNF3_1 |
+                    GPIO_CRL_MODE3  );
     
     //setup TIM15
 
@@ -128,6 +131,13 @@ void init_timers(void) {
     TIM15->CCMR1 |= ( TIM_CCMR1_OC1M );
     //enable CCR1 output OC1
     TIM15->CCER |= ( TIM_CCER_CC1E );
+    
+    //setup CC2 input channel to IC2 mapped to TI2
+    TIM15->CCMR1 |= ( TIM_CCMR1_CC2S_0 );
+    //trigger selection
+    TIM15->SMCR |= (TIM_SMCR_TS_2 | TIM_SMCR_TS_1);
+    //trigger slave mode
+    TIM15->SMCR |= (TIM_SMCR_SMS_2|TIM_SMCR_SMS_1);
     
     //enable TIM15
     TIM15->CR1 |= ( TIM_CR1_CEN );
@@ -169,8 +179,9 @@ void get_pulse_ms_tim4(void){
     }
 }
 
-void send_pulse_tim16(uint8_t pulse_ms){
-    TIM16->CCR1 = (uint16_t)(pulse_ms);
+void send_pulse_tim15(uint8_t pulse_ms){
+    TIM15->CCR1 = (uint16_t)(pulse_ms);
+    TIM15->EGR |= TIM_EGR_CC2G;//trigger ccr2
 }
 
 static __IO uint32_t TimingDelay;
