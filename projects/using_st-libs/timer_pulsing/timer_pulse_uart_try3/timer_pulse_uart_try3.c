@@ -8,9 +8,9 @@
 //#include <stm32f10x_tim.h>
 //#include <stm32f10x_spi.h>
 //#include "seven_segs.h"
-#include <stm32f10x_usart.h>
-#include <stdio.h>
-#include "manual_uart.h"
+//#include <stm32f10x_usart.h>
+//#include <stdio.h>
+//#include "manual_uart.h"
 
 void Delay(uint32_t nTime);
 
@@ -60,7 +60,7 @@ int main(void)
         //send_pulse_tim15(250);
         //TIM15->CR1 |= ( TIM_CR1_CEN );//enable TIM16
         //Delay(110);
-        while((TIM15->SR & TIM_SR_CC1IF) == 0); //wait till done
+        //while((TIM15->SR & TIM_SR_CC1IF) == 0); //wait till done
         
         pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
@@ -105,21 +105,29 @@ void init_timers(void) {
     //PB8 output push pull, alternate function, 2MHz
     GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
                     GPIO_CRH_MODE8_1);
+                    
     GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
                     GPIO_CRH_MODE8_0);
                     
     //PA2 TIM15_CH1
     //PUSH-PULL, AFIO, 2MHz
     GPIOA->CRL |= ( GPIO_CRL_CNF2_1 |
-                    GPIO_CRL_MODE2_1);
-    GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
-                    GPIO_CRL_MODE2_0);
+                    //GPIO_CRL_MODE2_1);
+                    GPIO_CRL_MODE2); //50MHz?
+    //GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
+    //                GPIO_CRL_MODE2_0);
+                    
+                    
     //PA3 TIM15_CH2 for input trigger
     GPIOA->CRL |= ( GPIO_CRL_CNF3_0);
     GPIOA->CRL &= ~(GPIO_CRL_CNF3_1 |
                     GPIO_CRL_MODE3  );
     
     //setup TIM15
+
+    //disable remap
+    AFIO->MAPR2 &= ~(AFIO_MAPR2_TIM15_REMAP);
+
 
     //timer 15 clock 24,000,000/1,000 = 24,000 so prescaler 24,000
     //to get 1,000Hz timer clock
