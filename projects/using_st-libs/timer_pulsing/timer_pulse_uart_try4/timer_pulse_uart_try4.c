@@ -57,10 +57,10 @@ int main(void)
         //enable TIM16
     //TIM15->CR1 |= ( TIM_CR1_CEN );//enable TIM16
     
-        //send_pulse_tim15(250);
+        send_pulse_tim2(10);
         //TIM15->CR1 |= ( TIM_CR1_CEN );//enable TIM16
         //Delay(110);
-        //while((TIM15->SR & TIM_SR_CC1IF) == 0); //wait till done
+        while((TIM2->SR & TIM_SR_CC3IF) == 0); //wait till done
         
         pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
@@ -115,10 +115,9 @@ void init_timers(void) {
     //PA2 TIM15_CH1
     //PUSH-PULL, AFIO, 2MHz
     GPIOA->CRL |= ( GPIO_CRL_CNF2_1 |
-                    //GPIO_CRL_MODE2_1);
                     GPIO_CRL_MODE2); //50MHz?
-    //GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
-    //                GPIO_CRL_MODE2_0);
+    GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
+                    GPIO_CRL_MODE2_0);
                     
     /*GPIOA->CRL |= ( GPIO_CRL_CNF0_1 |
                     GPIO_CRL_MODE0); //50MHz?
@@ -126,9 +125,9 @@ void init_timers(void) {
     
     
     //PA3 TIM15_CH2 for input trigger
-    GPIOA->CRL |= ( GPIO_CRL_CNF3_0);
-    GPIOA->CRL &= ~(GPIO_CRL_CNF3_1 |
-                    GPIO_CRL_MODE3  );
+    //GPIOA->CRL |= ( GPIO_CRL_CNF3_0);
+    //GPIOA->CRL &= ~(GPIO_CRL_CNF3_1 |
+    //                GPIO_CRL_MODE3  );
     
     /*GPIOA->CRL |= ( GPIO_CRL_CNF1_0);
     GPIOA->CRL &= ~(GPIO_CRL_CNF1_1 |
@@ -184,18 +183,21 @@ void init_timers(void) {
     //TIM2->CR1 |= ( TIM_CR1_OPM );
     
     //setup PWM mode two, OCIM 111, OC3 is high when CNT < CCR3
+    //not above comment!!!
     TIM2->CCMR2 |= ( TIM_CCMR2_OC3M );
+    TIM2->CCMR2 &= ~TIM_CCMR2_OC3M_0;
+    
     //enable CCR1 output OC1
     TIM2->CCER |= ( TIM_CCER_CC3E );
     
     //setup CC4 input channel to IC4 mapped to TI4
-    TIM2->CCMR2 |= ( TIM_CCMR2_CC4S_0 );
+    //TIM2->CCMR2 |= ( TIM_CCMR2_CC4S_0 );
     //trigger selection
-    TIM2->SMCR |= (TIM_SMCR_TS_2 | TIM_SMCR_TS_1);
+    //TIM2->SMCR |= (TIM_SMCR_TS_2 | TIM_SMCR_TS_1);
     
     
     //trigger slave mode
-    TIM2->SMCR |= (TIM_SMCR_SMS_2|TIM_SMCR_SMS_1);
+    //TIM2->SMCR |= (TIM_SMCR_SMS_2|TIM_SMCR_SMS_1);
     //TIM15->SMCR |= TIM_SMCR_SMS_2;
     
     //one pulse mode
@@ -204,7 +206,7 @@ void init_timers(void) {
     send_pulse_tim2(128);
     
     //enable TIM2
-    TIM2->CR1 |= ( TIM_CR1_CEN );
+    //TIM2->CR1 |= ( TIM_CR1_CEN );
 
     
     //---------setup TIM4 stuff----------------
@@ -247,7 +249,9 @@ void get_pulse_ms_tim4(void){
 
 void send_pulse_tim2(uint8_t pulse_ms){
     TIM2->CCR3 = (uint16_t)(pulse_ms);
-    //TIM15->EGR |= TIM_EGR_CC2G;//trigger ccr2
+    //TIM2->EGR |= TIM_EGR_UG;//trigger update
+    TIM2->CR1 |= TIM_CR1_CEN;
+    //TIM2->EGR |= TIM_EGR_CC4G;//trigger stuff
 }
 
 static __IO uint32_t TimingDelay;
