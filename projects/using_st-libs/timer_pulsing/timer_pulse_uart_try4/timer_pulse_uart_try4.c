@@ -16,7 +16,7 @@ void Delay(uint32_t nTime);
 
 void init_timers(void);
 
-void send_pulse_tim15(uint8_t pulse_ms);
+void send_pulse_tim2(uint8_t pulse_ms);
 
 void get_pulse_ms_tim4(void);
 
@@ -81,11 +81,14 @@ void init_timers(void) {
     //setup clock for GPIOB with alternate function IO allowed
     //then also enable the  TIM15 clock
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
-                        RCC_APB2ENR_AFIOEN  |
-                        RCC_APB2ENR_TIM15EN );
+                        RCC_APB2ENR_AFIOEN  //|
+                        //RCC_APB2ENR_TIM15EN 
+                        );
                         
-    //timer 15 remap?
-    //
+    
+    //setup timer 2 clock
+    
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
     
     //setup GPIOA
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPAEN  );
@@ -117,12 +120,21 @@ void init_timers(void) {
     //GPIOA->CRL &= ~(GPIO_CRL_CNF2_0 |
     //                GPIO_CRL_MODE2_0);
                     
-                    
+    /*GPIOA->CRL |= ( GPIO_CRL_CNF0_1 |
+                    GPIO_CRL_MODE0); //50MHz?
+    */
+    
+    
     //PA3 TIM15_CH2 for input trigger
     GPIOA->CRL |= ( GPIO_CRL_CNF3_0);
     GPIOA->CRL &= ~(GPIO_CRL_CNF3_1 |
                     GPIO_CRL_MODE3  );
     
+    /*GPIOA->CRL |= ( GPIO_CRL_CNF1_0);
+    GPIOA->CRL &= ~(GPIO_CRL_CNF1_1 |
+                    GPIO_CRL_MODE1  );
+    */
+    /*
     //setup TIM15
 
     //disable remap
@@ -151,7 +163,7 @@ void init_timers(void) {
     
     //trigger slave mode
     TIM15->SMCR |= (TIM_SMCR_SMS_2|TIM_SMCR_SMS_1);
-    //TIM15->SMCR |= TIM_SMCR_SMS_2;s
+    //TIM15->SMCR |= TIM_SMCR_SMS_2;
     
     //one pulse mode
     TIM15->CR1 |= ( TIM_CR1_OPM );
@@ -160,9 +172,43 @@ void init_timers(void) {
     
     //enable TIM15
     TIM15->CR1 |= ( TIM_CR1_CEN );
+    */
+    
+    //-----------setup TIM2--------------------
+    
+    //timer 2 clock 24,000,000/1,000 = 24,000 so prescaler 24,000
+    //to get 1,000Hz timer clock
+    TIM2->PSC = (uint16_t)(23999); //23999 + 1 = 24000
+    TIM2->ARR = (uint16_t)(255); //0 to 255 ms
+    //one pulse mode
+    //TIM2->CR1 |= ( TIM_CR1_OPM );
+    
+    //setup PWM mode two, OCIM 111, OC3 is high when CNT < CCR3
+    TIM2->CCMR2 |= ( TIM_CCMR2_OC3M );
+    //enable CCR1 output OC1
+    TIM2->CCER |= ( TIM_CCER_CC3E );
+    
+    //setup CC4 input channel to IC4 mapped to TI4
+    TIM2->CCMR2 |= ( TIM_CCMR2_CC4S_0 );
+    //trigger selection
+    TIM2->SMCR |= (TIM_SMCR_TS_2 | TIM_SMCR_TS_1);
     
     
-    //setup TIM4 stuff
+    //trigger slave mode
+    TIM2->SMCR |= (TIM_SMCR_SMS_2|TIM_SMCR_SMS_1);
+    //TIM15->SMCR |= TIM_SMCR_SMS_2;
+    
+    //one pulse mode
+    TIM2->CR1 |= ( TIM_CR1_OPM );
+    
+    send_pulse_tim2(128);
+    
+    //enable TIM2
+    TIM2->CR1 |= ( TIM_CR1_CEN );
+
+    
+    //---------setup TIM4 stuff----------------
+    
     //using PWM input mode from RM0041 page 292
     
     TIM4->PSC = (uint16_t)(23999); //to get 1,000Hz timer clock
@@ -199,8 +245,8 @@ void get_pulse_ms_tim4(void){
     }
 }
 
-void send_pulse_tim15(uint8_t pulse_ms){
-    TIM15->CCR1 = (uint16_t)(pulse_ms);
+void send_pulse_tim2(uint8_t pulse_ms){
+    TIM2->CCR3 = (uint16_t)(pulse_ms);
     //TIM15->EGR |= TIM_EGR_CC2G;//trigger ccr2
 }
 
