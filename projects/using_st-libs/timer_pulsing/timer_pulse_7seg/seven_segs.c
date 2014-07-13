@@ -150,7 +150,7 @@ void write_digit(int8_t num, uint8_t dig){
 	}
     GPIOA->BSRR |= (1<<4); //put SS/CS high again to latch shift register
 	//flip_latch();
-    Delay(25);
+    Delay(1);
 }
 
 void msg_error(void){

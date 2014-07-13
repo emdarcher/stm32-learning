@@ -50,8 +50,8 @@ int main(void)
         //for (i = 0; i < 1000;i++){
         //    write_number(pulse_ms_tim4);
         //}
-        //send_pulse_tim16(100);
-        //while((TIM16->SR & TIM_SR_CC1IF) == 0); //wait till done
+        send_pulse_tim16(100);
+        while((TIM16->SR & TIM_SR_CC1IF) == 0); //wait till done
         //Delay(200);
         pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
@@ -73,6 +73,12 @@ void init_timers(void) {
     RCC->APB2ENR |= (   RCC_APB2ENR_IOPBEN  |
                         RCC_APB2ENR_AFIOEN  |
                         RCC_APB2ENR_TIM16EN );
+    
+    
+    
+        //enable TIM4 clock!!!!
+    RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
+
     
     
     //setup pins 
