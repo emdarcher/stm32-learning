@@ -18,7 +18,7 @@ void send_pulse_tim16(uint8_t pulse_ms);
 void get_pulse_ms_tim4(void);
 
 uint16_t pulse_ms_tim4;
-
+uint16_t pulse_store;
 int main(void)
 {
     //GPIO_InitTypeDef	GPIO_InitStructure;
@@ -47,15 +47,18 @@ int main(void)
     while (1)	{
         int i;
         
-        for (i = 0; i < 1000;i++){
-            write_number(pulse_ms_tim4);
-        }
-        send_pulse_tim16(100);
-        Delay(200);
+        //for (i = 0; i < 1000;i++){
+        //    write_number(pulse_ms_tim4);
+        //}
+        //send_pulse_tim16(100);
+        //while((TIM16->SR & TIM_SR_CC1IF) == 0); //wait till done
+        //Delay(200);
+        pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
-        for (i=0;i<1000;i++){
-            write_number(pulse_ms_tim4);
-        }
+        //for (i=0;i<1000;i++){
+            //write_number(pulse_ms_tim4);
+            write_number(pulse_store);
+        //}
     }   
 }
 
@@ -82,9 +85,10 @@ void init_timers(void) {
                     
     //PB8 output push pull, alternate function, 2MHz
     GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
-                    GPIO_CRH_MODE8_1);
-    GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
-                    GPIO_CRH_MODE8_0);
+                    //GPIO_CRH_MODE8_1|
+                    GPIO_CRH_MODE8);
+    //GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
+    //                GPIO_CRH_MODE8_0);
     
     
     //setup TIM16
@@ -94,15 +98,20 @@ void init_timers(void) {
     TIM16->PSC = (uint16_t)(23999); //23999 + 1 = 24000
     TIM16->ARR = (uint16_t)(255); //0 to 255 ms
     //one pulse mode
-    TIM16->CR1 |= ( TIM_CR1_OPM );
+    //TIM16->CR1 |= ( TIM_CR1_OPM );
     //setup PWM mode two, OCIM 111, OC1 is high when CNT < CCR1
     TIM16->CCMR1 |= ( TIM_CCMR1_OC1M );
+    TIM16->CCMR1 &= ~TIM_CCMR1_OC1M_0;
     //enable CCR1 output OC1
     TIM16->CCER |= ( TIM_CCER_CC1E );
     
-    //enable TIM16
-    TIM16->CR1 |= ( TIM_CR1_CEN );
     
+    //one pulse mode
+    TIM16->CR1 |= ( TIM_CR1_OPM );
+    
+    //enable TIM16
+    //TIM16->CR1 |= ( TIM_CR1_CEN );
+    send_pulse_tim16(34);
     
     //setup TIM4 stuff
     //using PWM input mode from RM0041 page 292
@@ -133,7 +142,7 @@ void init_timers(void) {
 
 void get_pulse_ms_tim4(void){
     
-    int difference = (TIM4->CCR2) - (TIM4->CCR1);
+    int difference = (TIM4->CCR2);
     
     if(difference > 0){
         pulse_ms_tim4 = difference;
@@ -142,6 +151,7 @@ void get_pulse_ms_tim4(void){
 
 void send_pulse_tim16(uint8_t pulse_ms){
     TIM16->CCR1 = (uint16_t)(pulse_ms);
+    TIM16->CR1 |= (TIM_CR1_CEN);
 }
 
 static __IO uint32_t TimingDelay;

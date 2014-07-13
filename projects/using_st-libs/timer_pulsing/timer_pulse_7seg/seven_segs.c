@@ -91,7 +91,6 @@ void init_SPI1(void){
     //CPHA = 0
     SPI1->CR1 &= ~( SPI_CR1_BIDIMODE | 
                     SPI_CR1_DFF | 
-                    //SPI_CR1_SSM | 
                     SPI_CR1_LSBFIRST |
                     SPI_CR1_CPOL | 
                     SPI_CR1_CPHA |
