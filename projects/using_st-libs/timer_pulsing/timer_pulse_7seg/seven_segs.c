@@ -115,16 +115,13 @@ void init_SPI1(void){
 }
 
 void write_SPI1(uint8_t out_byte){
-    //SPI1->CR1 &= ~SPI_CR1_SSI;
+    
     SPI1->DR = out_byte;
-    //set_NSS();
-    //SPI_I2S_SendData(SPI1, out_byte);
-    //spiReadWrite (SPI2 , rxbuf , SPI_out_byte , 4, SPI_SLOW );
+    
     while( !(SPI1->SR & SPI_SR_TXE) ); // wait until transmit complete
-        //set_NSS();
+        
     while( SPI1->SR & SPI_SR_BSY ); // wait until SPI is not busy anymore
-    //set_NSS();
-    //SPI1->CR1 |= SPI_CR1_SSI;
+    
 }
 
 void write_digit(int8_t num, uint8_t dig){
@@ -149,7 +146,7 @@ void write_digit(int8_t num, uint8_t dig){
 		}
 	}
     GPIOA->BSRR |= (1<<4); //put SS/CS high again to latch shift register
-	//flip_latch();
+	
     Delay(1);
 }
 
