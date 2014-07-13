@@ -203,7 +203,7 @@ void init_timers(void) {
     //one pulse mode
     TIM2->CR1 |= ( TIM_CR1_OPM );
     
-    send_pulse_tim2(150);
+    send_pulse_tim2(10);
     
     //enable TIM2
     //TIM2->CR1 |= ( TIM_CR1_CEN );
@@ -215,7 +215,7 @@ void init_timers(void) {
     
     TIM4->PSC = (uint16_t)(23999); //to get 1,000Hz timer clock
     
-    //setup CCR1 and CCR2 to go to TI1
+    //setup CCR1 and CCR2 to go to TI1Makefile       seven_segs.c         startup_st
     TIM4->CCMR1 |= (TIM_CCMR1_CC1S_0 |
                     TIM_CCMR1_CC2S_1 );
                     
