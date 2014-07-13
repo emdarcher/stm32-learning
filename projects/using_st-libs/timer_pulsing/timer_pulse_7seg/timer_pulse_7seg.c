@@ -17,8 +17,8 @@ void send_pulse_tim16(uint8_t pulse_ms);
 
 void get_pulse_ms_tim4(void);
 
-uint16_t pulse_ms_tim4;
-uint16_t pulse_store;
+volatile uint16_t pulse_ms_tim4;
+volatile uint16_t pulse_store;
 int main(void)
 {
     //GPIO_InitTypeDef	GPIO_InitStructure;
@@ -56,8 +56,8 @@ int main(void)
         pulse_store = TIM4->CCR2;
         get_pulse_ms_tim4();
         //for (i=0;i<1000;i++){
-            //write_number(pulse_ms_tim4);
-            write_number(pulse_store);
+            write_number(pulse_ms_tim4);
+            //write_number(pulse_store);
         //}
     }   
 }
@@ -85,7 +85,6 @@ void init_timers(void) {
                     
     //PB8 output push pull, alternate function, 2MHz
     GPIOB->CRH |= ( GPIO_CRH_CNF8_1 |
-                    //GPIO_CRH_MODE8_1|
                     GPIO_CRH_MODE8);
     //GPIOB->CRH &= ~(GPIO_CRH_CNF8_0 |
     //                GPIO_CRH_MODE8_0);
