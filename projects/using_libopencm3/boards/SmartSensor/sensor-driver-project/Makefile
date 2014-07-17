@@ -21,6 +21,9 @@ BINARY = main
 
 LDSCRIPT = ../SmartSensor.ld
 
+OBJS = lis302.o
+OBJS+= my_i2c.o
+
 include ../../Makefile.include
 
 debug:

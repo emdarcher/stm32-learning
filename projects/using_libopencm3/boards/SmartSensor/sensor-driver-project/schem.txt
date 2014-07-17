@@ -1,9 +1,15 @@
 //rough schematic done in ASCII
 
+// link to STM32F103C8T6 info and datasheet:
+// http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1031/LN1565/PF164476
+
+// link to LIS302DL info and datasheet:
+// http://www.st.com/web/catalog/sense_power/FM89/SC444/PF152913
+
 STM32F103C8T6
 --------------|
     PB9     46|----A-INT1-----
-    PB9     45|----A-INT2-----
+    PB8     45|----A-INT2-----
               ~
     PB7     43|----I2C1SDA----
     PB6     42|----I2C1SCL----
