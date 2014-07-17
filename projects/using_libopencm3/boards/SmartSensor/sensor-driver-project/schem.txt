@@ -1,0 +1,12 @@
+//rough schematic done in ASCII
+
+STM32F103C8T6
+--------------|
+    PB9     46|----A-INT1-----
+    PB9     45|----A-INT2-----
+              ~
+    PB7     43|----I2C1SDA----
+    PB6     42|----I2C1SCL----
+--------------|
+
+
