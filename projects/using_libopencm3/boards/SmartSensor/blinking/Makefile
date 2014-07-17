@@ -23,3 +23,5 @@ LDSCRIPT = ../SmartSensor.ld
 
 include ../../Makefile.include
 
+debug:
+	arm-none-eabi-gdb $(BINARY).elf
