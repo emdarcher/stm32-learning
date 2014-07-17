@@ -24,4 +24,4 @@ LDSCRIPT = ../SmartSensor.ld
 include ../../Makefile.include
 
 debug:
-	arm-none-eabi-gdb $(BINARY).elf
+	arm-none-eabi-gdb -ex 'target extended-remote :4242' $(BINARY).elf
