@@ -8,5 +8,21 @@ STM32F103C8T6
     PB7     43|----I2C1SDA----
     PB6     42|----I2C1SCL----
 --------------|
+            
+            2.2k
+I2C1SDA----/\/\/\----VDDP
+            2.2k
+I2C1SCL----/\/\/\----VDDP
 
+                LIS302DL
+        |----------------------|
+VDDP----|1  VDDIO    SCL/SCK 14|----I2C1SCL
+GND ----|2  GND      SDA/SD1 13|----I2C1SDA
+VDDP----|3  Rsvd(VDD) A0/SDO 12|----VDDP
+GND ----|4  GND    Rsvd(GND) 11|----GND
+GND ----|5  GND         GND  10|----GND
+VDDP----|6  VDD         INT2  9|----A-INT2
+VDDP----|7  I2C/SPI     INT1  8|----A-INT1
+        |----------------------|
+        
 
