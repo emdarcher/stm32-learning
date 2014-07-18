@@ -4,6 +4,8 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/i2c.h>
 
+#include "my_i2c.h"
+#include "lis302.h"
 
 #include "main.h"
 
@@ -29,6 +31,11 @@ void main(void)
 void init_things(void){
     //put various init function calls and things in here
     
+    init_GPIO();
+    
+    //init_I2C1();
+    //init the sensor
+    init_lis302();
     
 }
 

@@ -1,4 +1,4 @@
-
+#include "my_i2c.h"
 
 void init_I2C1(void){
     
@@ -24,7 +24,8 @@ void init_I2C1(void){
     I2C1_OAR1 &= ~I2C_OAR1_ADDMODE;
     //set clock speed
     i2c_set_clock_frequency(I2C1, I2C_CR2_FREQ_8MHZ);
-    i2c_set_ccr(I2C1, 0x28);
+    i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
+    
     
     
     

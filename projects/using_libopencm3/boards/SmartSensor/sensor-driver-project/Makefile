@@ -16,13 +16,12 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
-
-BINARY = main 
+BINARY = main
 
 LDSCRIPT = ../SmartSensor.ld
 
 OBJS = lis302.o
-OBJS+= my_i2c.o
+OBJS +=	my_i2c.o
 
 include ../../Makefile.include
 
