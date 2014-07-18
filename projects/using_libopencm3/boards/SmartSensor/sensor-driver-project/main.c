@@ -15,6 +15,9 @@ void main(void)
 {
     //main area
     
+    //will run at 24MHz by using pll on the internal 8Mhz HSI clock
+    rcc_clock_setup_in_hsi_out_24mhz();
+    
     //init the stuff
     init_things();
     
