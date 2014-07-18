@@ -42,7 +42,7 @@ void init_things(void){
 void init_GPIO(void){
 
     //enable GPIOB clock
-    rcc_periph_clock_enable(RCC_GPIOB);
+    //rcc_periph_clock_enable(RCC_GPIOB);
     
     
     

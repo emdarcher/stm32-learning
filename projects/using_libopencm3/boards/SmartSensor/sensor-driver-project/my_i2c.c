@@ -26,9 +26,6 @@ void init_I2C1(void){
     i2c_set_clock_frequency(I2C1, I2C_CR2_FREQ_8MHZ);
     i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
     
-    
-    
-    
 }
 
 void init_I2C1_GPIO(void){
@@ -41,6 +38,5 @@ void init_I2C1_GPIO(void){
     gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_10_MHZ, 
                     GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
                     (GPIO6 | GPIO7) );
-    
     
 }

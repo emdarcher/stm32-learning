@@ -1,10 +1,12 @@
-//rough schematic done in ASCII
+// rough schematic done in ASCII
 
 // link to STM32F103C8T6 info and datasheet:
 // http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1031/LN1565/PF164476
 
 // link to LIS302DL info and datasheet:
 // http://www.st.com/web/catalog/sense_power/FM89/SC444/PF152913
+
+/*
 
 STM32F103C8T6
 --------------|
@@ -30,5 +32,6 @@ GND ----|5  GND         GND  10|----GND
 VDDP----|6  VDD         INT2  9|----A-INT2
 VDDP----|7  I2C/SPI     INT1  8|----A-INT1
         |----------------------|
-        
+    
 
+*/

@@ -11,8 +11,6 @@ void init_lis302(void){
     //init I2C1
     init_I2C1();
     
-    
-    
 }
 
 

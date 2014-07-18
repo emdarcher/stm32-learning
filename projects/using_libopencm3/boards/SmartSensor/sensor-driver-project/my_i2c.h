@@ -10,4 +10,7 @@
 void init_I2C1(void);
 void init_I2C1_GPIO(void);
 
+void I2C1_write(void); //add some input args for these later
+void I2C1_read(void);
+
 #endif
