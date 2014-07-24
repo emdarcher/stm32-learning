@@ -38,6 +38,9 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     
     while (!((I2C_SR1(I2C1) & I2C_SR1_SB) 
     & (I2C_SR2(I2C1) & (I2C_SR2_MSL | I2C_SR2_BUSY))));
+    //while (!((I2C1_SR1 & I2C_SR1_SB) 
+    //& (I2C1_SR2 & (I2C_SR2_MSL | I2C_SR2_BUSY))));
+    
     
     //send address write
     i2c_send_7bit_address(I2C1, LIS302_ADDRESS, I2C_WRITE);
