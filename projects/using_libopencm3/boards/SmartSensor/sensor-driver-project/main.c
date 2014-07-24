@@ -9,26 +9,37 @@
 
 #include "main.h"
 
-
+volatile int8_t x_value;
+volatile int8_t y_value;
+volatile int8_t z_value;
 
 void main(void)
 {
     //main area
     
-    //will run at 24MHz by using pll on the internal 8Mhz HSI clock
-    rcc_clock_setup_in_hsi_out_24mhz();
+    //init system clock stuff
+    init_system_clock();
     
     //init the stuff
     init_things();
     
+    //int8_t x_value;
     
     //infinite loop
     while(1){
         
-        
-        
+        x_value = lis302_get_axis(LIS302_OUTX);
+        y_value = lis302_get_axis(LIS302_OUTY);
+        z_value = lis302_get_axis(LIS302_OUTZ);
     }
     
+}
+
+void init_system_clock(void){
+
+    //will run at 24MHz by using pll on the internal 8Mhz HSI clock
+    rcc_clock_setup_in_hsi_out_24mhz();
+
 }
 
 void init_things(void){

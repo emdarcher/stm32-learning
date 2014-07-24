@@ -14,5 +14,6 @@
 //prototypes
 void init_things(void);
 void init_GPIO(void);
+void init_system_clock(void);
 
 #endif

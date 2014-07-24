@@ -11,8 +11,12 @@ void init_I2C1(void){
     //enable clock
     rcc_periph_clock_enable(RCC_I2C1);
     
+    /* Disable the I2C before changing any configuration. */
+    i2c_peripheral_disable(I2C2);
+
+    
     //setup I2C1 peripheral
-    i2c_peripheral_enable(I2C1);
+    //i2c_peripheral_enable(I2C1);
     //set duty cycle
     i2c_set_dutycycle(I2C1, I2C_CCR_DUTY_DIV2);
     //set own address, put to 0x00 b/c we don't really use it
@@ -25,6 +29,11 @@ void init_I2C1(void){
     //set clock speed
     i2c_set_clock_frequency(I2C1, I2C_CR2_FREQ_8MHZ);
     i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
+    i2c_set_trise(I2C1, 0x09);//based on datasheet/manual
+    
+    //setup I2C1 peripheral
+    i2c_peripheral_enable(I2C1);
+    
     
 }
 
@@ -35,7 +44,7 @@ void init_I2C1_GPIO(void){
     
     //setup GPIO pins PB7 and PB6
     //for af output open-drain
-    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_10_MHZ, 
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, 
                     GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
                     (GPIO6 | GPIO7) );
     
