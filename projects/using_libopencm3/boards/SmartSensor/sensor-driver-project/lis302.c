@@ -33,6 +33,8 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     
     uint8_t axis_data;
     
+    //i2c_enable_ack(I2C1);
+    
     //start i2c1
     i2c_send_start(I2C1);
     
@@ -74,10 +76,16 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     //get data in
     axis_data = i2c_get_data(I2C1);
     
+    /* Cleaning I2C_SR1_ACK. */
+	//I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
+    
     while (!(I2C_SR1(I2C1) & I2C_SR1_BTF))
     
     //send stop
     i2c_send_stop(I2C1);
+    
+    //get data in
+    //axis_data = i2c_get_data(I2C1);
     
     return axis_data;
 }

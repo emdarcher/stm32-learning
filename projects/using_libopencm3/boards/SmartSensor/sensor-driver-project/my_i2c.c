@@ -3,7 +3,7 @@
 void init_I2C1(void){
     
     //reset all i2c stuff
-    i2c_reset(I2C1);
+    //i2c_reset(I2C1);
     
     //setup gpio
     //init_I2C1_GPIO();
@@ -23,16 +23,24 @@ void init_I2C1(void){
     
     //setup GPIO pins PB7 and PB6
     //for af output open-drain
-    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, 
+    /*gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, 
                     GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
                     (GPIO6 | GPIO7) );
+    */
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, 
+                    GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
+                    (GPIO_I2C1_SDA | GPIO_I2C1_SCL) );
     
     
     /* Disable the I2C before changing any configuration. */
-    i2c_peripheral_disable(I2C1);
-
+    //i2c_peripheral_disable(I2C1);
+    //setup I2C1 peripheral
+    //i2c_peripheral_enable(I2C1);
     //set clock speed
     i2c_set_clock_frequency(I2C1, I2C_CR2_FREQ_8MHZ);
+    
+    i2c_peripheral_disable(I2C1);
+    
     i2c_set_standard_mode(I2C1);
     
     i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
