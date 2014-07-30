@@ -41,7 +41,8 @@ void init_I2C1(void){
     
     i2c_peripheral_disable(I2C1);
     
-    i2c_set_standard_mode(I2C1);
+    //i2c_set_standard_mode(I2C1);
+    i2c_set_fast_mode(I2C1);
     
     i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
     i2c_set_trise(I2C1, 0x09);//based on datasheet/manual

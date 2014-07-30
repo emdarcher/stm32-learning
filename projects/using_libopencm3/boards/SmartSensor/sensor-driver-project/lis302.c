@@ -67,16 +67,17 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     i2c_send_7bit_address(I2C1, LIS302_ADDRESS, I2C_READ);
     
     /* Waiting for address is transferred. */
-	while (!(I2C_SR1(I2C1) & I2C_SR1_ADDR));
+    while (!(I2C_SR1(I2C1) & I2C_SR1_ADDR));
     
     /* Cleaning ADDR condition sequence. */
-	reg32 = I2C_SR2(I2C1);
+    reg32 = I2C_SR2(I2C1);
     
     //get data in
     axis_data = i2c_get_data(I2C1);
     
     /* Cleaning I2C_SR1_ACK. */
-	I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
+    I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
+    
     
     while (!(I2C_SR1(I2C1) & I2C_SR1_BTF))
     
@@ -90,7 +91,7 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     //axis_data = i2c_get_data(I2C1);
     
     /* Original state. */
-	I2C_CR1(I2C1) &= ~I2C_CR1_POS;
+    I2C_CR1(I2C1) &= ~I2C_CR1_POS;
 
     
     return axis_data;
