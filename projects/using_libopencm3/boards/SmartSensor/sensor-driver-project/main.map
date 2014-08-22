@@ -608,16 +608,16 @@ OUTPUT(main.elf elf32-littlearm)
  .debug_ranges  0x0000000000000328       0x78 ../../../libopencm3//lib/libopencm3_stm32f1.a(flash_common_f01.o)
  .debug_ranges  0x00000000000003a0       0x20 ../../../libopencm3//lib/libopencm3_stm32f1.a(vector.o)
 
-.debug_line     0x0000000000000000     0x10bf
+.debug_line     0x0000000000000000     0x10bd
  .debug_line    0x0000000000000000      0x1b5 lis302.o
- .debug_line    0x00000000000001b5      0x15f my_i2c.o
- .debug_line    0x0000000000000314      0x120 main.o
- .debug_line    0x0000000000000434       0xea ../../../libopencm3//lib/libopencm3_stm32f1.a(gpio.o)
- .debug_line    0x000000000000051e      0x49d ../../../libopencm3//lib/libopencm3_stm32f1.a(rcc.o)
- .debug_line    0x00000000000009bb      0x2d8 ../../../libopencm3//lib/libopencm3_stm32f1.a(i2c_common_all.o)
- .debug_line    0x0000000000000c93      0x15f ../../../libopencm3//lib/libopencm3_stm32f1.a(rcc_common_all.o)
- .debug_line    0x0000000000000df2      0x1e2 ../../../libopencm3//lib/libopencm3_stm32f1.a(flash_common_f01.o)
- .debug_line    0x0000000000000fd4       0xeb ../../../libopencm3//lib/libopencm3_stm32f1.a(vector.o)
+ .debug_line    0x00000000000001b5      0x15d my_i2c.o
+ .debug_line    0x0000000000000312      0x120 main.o
+ .debug_line    0x0000000000000432       0xea ../../../libopencm3//lib/libopencm3_stm32f1.a(gpio.o)
+ .debug_line    0x000000000000051c      0x49d ../../../libopencm3//lib/libopencm3_stm32f1.a(rcc.o)
+ .debug_line    0x00000000000009b9      0x2d8 ../../../libopencm3//lib/libopencm3_stm32f1.a(i2c_common_all.o)
+ .debug_line    0x0000000000000c91      0x15f ../../../libopencm3//lib/libopencm3_stm32f1.a(rcc_common_all.o)
+ .debug_line    0x0000000000000df0      0x1e2 ../../../libopencm3//lib/libopencm3_stm32f1.a(flash_common_f01.o)
+ .debug_line    0x0000000000000fd2       0xeb ../../../libopencm3//lib/libopencm3_stm32f1.a(vector.o)
 
 .debug_str      0x0000000000000000     0x1283
  .debug_str     0x0000000000000000      0x4bd lis302.o

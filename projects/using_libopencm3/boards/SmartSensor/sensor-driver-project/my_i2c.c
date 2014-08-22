@@ -47,9 +47,6 @@ void init_I2C1(void){
     i2c_set_ccr(I2C1, 0x28); //should get us a 100kHz clock
     i2c_set_trise(I2C1, 0x09);//based on datasheet/manual
     
-    
-    
-    
     //setup I2C1 peripheral
     //i2c_peripheral_enable(I2C1);
     //set duty cycle

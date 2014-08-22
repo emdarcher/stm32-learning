@@ -78,7 +78,6 @@ uint8_t lis302_get_axis(uint8_t axis_reg){
     /* Cleaning I2C_SR1_ACK. */
     I2C_CR1(I2C1) &= ~I2C_CR1_ACK;
     
-    
     while (!(I2C_SR1(I2C1) & I2C_SR1_BTF))
     
     //get data in
