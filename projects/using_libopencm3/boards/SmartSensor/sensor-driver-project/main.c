@@ -13,6 +13,8 @@ volatile int8_t x_value;
 volatile int8_t y_value;
 volatile int8_t z_value;
 
+
+//the main function 
 void main(void)
 {
     //main area
@@ -34,14 +36,14 @@ void main(void)
     }
     
 }
-
+//system clock init things
 void init_system_clock(void){
 
     //will run at 24MHz by using pll on the internal 8Mhz HSI clock
     rcc_clock_setup_in_hsi_out_24mhz();
 
 }
-
+//init other things here
 void init_things(void){
     //put various init function calls and things in here
     
@@ -52,7 +54,7 @@ void init_things(void){
     init_lis302();
     
 }
-
+//init the GPIO here
 void init_GPIO(void){
 
     //enable GPIOB clock

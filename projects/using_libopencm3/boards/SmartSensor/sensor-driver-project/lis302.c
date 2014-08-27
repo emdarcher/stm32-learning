@@ -3,6 +3,7 @@
 #include "lis302.h"
 #include <stdint.h>
 
+//init all the things for the lis302 accelerometer
 void init_lis302(void){
     
     //init the A-int pins
@@ -13,7 +14,7 @@ void init_lis302(void){
     
 }
 
-
+//initialize the Accelerometer External interrupt inputs
 void init_Aint_pins(void){
     
     //enable GPIOB clock
@@ -26,6 +27,8 @@ void init_Aint_pins(void){
     
 }
 
+
+//function to get axis data in a particular axis reg in the lis302
 uint8_t lis302_get_axis(uint8_t axis_reg){
     
     uint32_t reg32 __attribute__((unused));
